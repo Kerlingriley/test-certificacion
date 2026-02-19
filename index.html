@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test de Certificación — Coach / Director (CAM + PBA)</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f5f5;color:#333;line-height:1.6}
+.container{max-width:800px;margin:0 auto;padding:20px}
+.header{background:linear-gradient(135deg,#1B3A5C,#2E6BA4);color:#fff;padding:30px;border-radius:12px;margin-bottom:24px;text-align:center}
+.header h1{font-size:24px;margin-bottom:8px}
+.header p{opacity:.85;font-size:14px}
+.info-bar{background:#fff;border-left:4px solid #E67E22;padding:16px 20px;border-radius:8px;margin-bottom:24px;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.info-bar strong{color:#E67E22}
+.section-header{background:#1B3A5C;color:#fff;padding:12px 20px;border-radius:8px 8px 0 0;margin-top:24px;font-size:16px;font-weight:700}
+.section-header span{opacity:.7;font-size:13px;margin-left:8px}
+.question{background:#fff;padding:20px;border:1px solid #e0e0e0;margin-bottom:2px;border-radius:0}
+.question:last-of-type{border-radius:0 0 8px 8px;margin-bottom:24px}
+.question:first-of-type{border-radius:0}
+.q-num{display:inline-block;background:#2E6BA4;color:#fff;width:28px;height:28px;border-radius:50%;text-align:center;line-height:28px;font-size:13px;font-weight:700;margin-right:10px}
+.q-text{font-weight:600;margin-bottom:12px;font-size:15px}
+.options label{display:block;padding:8px 12px;margin:4px 0;border-radius:6px;cursor:pointer;transition:background .2s;font-size:14px}
+.options label:hover{background:#f0f4ff}
+.options input{margin-right:8px}
+.correct{background:#e8f5e9!important;border-left:3px solid #2D8659}
+.incorrect{background:#ffebee!important;border-left:3px solid #C0392B}
+.explanation{display:none;margin-top:10px;padding:10px 14px;border-radius:6px;font-size:13px;background:#fff9c4}
+.btn-submit{display:block;width:100%;padding:16px;background:linear-gradient(135deg,#2D8659,#27ae60);color:#fff;border:none;border-radius:10px;font-size:18px;font-weight:700;cursor:pointer;margin:20px 0;transition:transform .1s}
+.btn-submit:hover{transform:scale(1.02)}
+.btn-submit:disabled{background:#ccc;cursor:not-allowed;transform:none}
+.results{display:none;background:#fff;padding:30px;border-radius:12px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.12);margin-bottom:30px}
+.score{font-size:64px;font-weight:800;margin:10px 0}
+.score.pass{color:#2D8659}
+.score.fail{color:#C0392B}
+.results h2{font-size:20px;margin-bottom:10px}
+.breakdown{text-align:left;margin-top:20px}
+.breakdown table{width:100%;border-collapse:collapse}
+.breakdown td,.breakdown th{padding:8px 12px;border-bottom:1px solid #eee;font-size:14px}
+.breakdown th{background:#f5f5f5;font-weight:600;text-align:left}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:700;margin-left:6px}
+.tag-cam{background:#e3f2fd;color:#1565c0}
+.tag-pba{background:#fce4ec;color:#c62828}
+.tag-matrix{background:#f3e5f5;color:#7b1fa2}
+.tag-both{background:#e8f5e9;color:#2e7d32}
+.name-input{width:100%;padding:12px;border:2px solid #ddd;border-radius:8px;font-size:16px;margin:10px 0}
+.name-input:focus{border-color:#2E6BA4;outline:none}
+.timer{position:fixed;top:10px;right:20px;background:#1B3A5C;color:#fff;padding:8px 16px;border-radius:20px;font-size:14px;font-weight:700;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+@media(max-width:600px){.container{padding:10px}.header{padding:20px}.header h1{font-size:20px}.timer{top:auto;bottom:10px;right:10px}}
+</style>
+</head>
+<body>
+<div class="timer" id="timer">⏱ 00:00</div>
+<div class="container">
+<div class="header">
+<h1>TEST DE CERTIFICACIÓN</h1>
+<h1>COACH / DIRECTOR (РОП)</h1>
+<p>Protocolos CAM v3 + PBA v3 + Matriz de Competencias</p>
+<p>40 preguntas | Aprobación: ≥ 75% (30/40) | Tiempo sugerido: 45 minutos</p>
+</div>
+
+<div class="info-bar">
+<strong>⚠️ Instrucciones:</strong> Seleccione la MEJOR respuesta para cada pregunta. Solo una respuesta es correcta por pregunta. Al finalizar, presione "Enviar Test" para ver sus resultados. El test cubre: Protocolo CAM v3, Protocolo PBA v3 y Matriz de Competencias.
+</div>
+
+<div style="background:#fff;padding:20px;border-radius:8px;margin-bottom:20px">
+<label style="font-weight:600">Nombre completo:</label>
+<input type="text" class="name-input" id="userName" placeholder="Ingrese su nombre">
+<label style="font-weight:600">Cargo:</label>
+<input type="text" class="name-input" id="userRole" placeholder="Coach / Director / Team Leader">
+</div>
+
+<div id="questionsContainer"></div>
+<button class="btn-submit" id="submitBtn" onclick="gradeTest()">📝 Enviar Test</button>
+<div class="results" id="results"></div>
+</div>
+
+<script>
+const questions = [
+// ===== SECCIÓN A: PROTOCOLO CAM v3 (15 preguntas) =====
+{s:"A",sec:"Protocolo CAM v3 — Estructura y Objetivos",tag:"cam",
+q:"¿Cuáles son los objetivos diarios de Sales Minimum para un CAM?",
+o:["15 consultings, 170 min, 88% calidad","17 consultings, 170 min, ≥85% calidad","20 consultings, 200 min, 90% calidad","17 consultings, 185 min, ≥85% calidad"],
+a:1,e:"CAM: 17 consultings/día, 170 minutos efectivos, ≥85% calidad (Sección 4/10 del Protocolo CAM v3)."},
+
+{s:"A",sec:"Protocolo CAM v3 — Rol y Foco",tag:"cam",
+q:"¿Cuál es el foco principal y exclusivo del CAM?",
+o:["Gestión de portafolio de clientes activos","Leads: perfilar y motivar primer depósito (FTD)","Clientes VIP con SOT alto","Reactivación de clientes inactivos"],
+a:1,e:"El CAM trabaja exclusivamente con leads. No trabaja con FTDs. Su objetivo es perfilar correctamente e incentivar el depósito lo antes posible."},
+
+{s:"A",sec:"Protocolo CAM v3 — Leads y Asignación",tag:"cam",
+q:"¿Qué tipo de leads NO debe llamar el CAM?",
+o:["Leads de campañas de marketing","Leads de Outreach personal","Leads originados por IB (Introducing Broker)","Leads asignados por el Director"],
+a:2,e:"Los managers NO llaman leads originados por IB — solo sus IBs y clientes de Cold Outreach link."},
+
+{s:"A",sec:"Protocolo CAM v3 — Pipeline",tag:"cam",
+q:"¿Cuál es el objetivo semanal de pipeline para un CAM?",
+o:["5-10 nuevos prospectos, cerrar 2-3 por semana","7-15 nuevos prospectos, cerrar 3-5 por semana","10-20 nuevos prospectos, cerrar 5-8 por semana","3-7 nuevos prospectos, cerrar 1-2 por semana"],
+a:1,e:"Pipeline: agregar 7-15 nuevos prospectos y cerrar 3-5 clientes por semana (Sección 8.5)."},
+
+{s:"A",sec:"Protocolo CAM v3 — Infracciones",tag:"cam",
+q:"¿Cuál es la penalización por una primera infracción menor?",
+o:["Advertencia sin penalización","−5% en Qcalls","−10% en Qcalls","Suspensión temporal"],
+a:0,e:"Primera infracción menor = advertencia sin penalización. Segunda = −5%, Tercera = −10% (Sección 11)."},
+
+{s:"A",sec:"Protocolo CAM v3 — Infracciones",tag:"cam",
+q:"¿Cuál es la penalización por una primera infracción mayor?",
+o:["Advertencia sin penalización","−5% en Qcalls","−10% en Qcalls","−15% en Qcalls"],
+a:2,e:"Primera infracción mayor = −10% en Qcalls. Segunda = −15%, Tercera = −20%."},
+
+{s:"A",sec:"Protocolo CAM v3 — Reporte Semanal",tag:"cam",
+q:"¿Cuál es la fecha límite para entregar el reporte semanal?",
+o:["Jueves 5:00 PM","Viernes 12:00 PM","Viernes 1:00 PM","Lunes 9:00 AM de la siguiente semana"],
+a:2,e:"El cierre del reporte semanal es viernes 1:00 PM (Sección 8.6)."},
+
+{s:"A",sec:"Protocolo CAM v3 — Quality Control",tag:"cam",
+q:"¿Cuántas llamadas debe monitorear el Director/Coach como mínimo para control de calidad?",
+o:["3 llamadas por semana por CAM","5 llamadas por semana por CAM","10 llamadas por semana por CAM","Todas las llamadas de los primeros 5 días"],
+a:0,e:"Mínimo 3 llamadas por semana por manager para monitoreo de calidad (Sección 9). En onboarding, la supervisión es mucho más intensa."},
+
+{s:"A",sec:"Protocolo CAM v3 — SM System",tag:"cam",
+q:"La fórmula del bonus CAM incluye SOT × KPI × Qcalls. ¿Cuál es el umbral mínimo para recibir bonus?",
+o:["50% del objetivo","60% del objetivo","70% del objetivo","80% del objetivo"],
+a:2,e:"Umbral mínimo: 70%. Por debajo no se recibe bonus. Por encima de 100% el bonus es sin tope (Sección 12)."},
+
+{s:"A",sec:"Protocolo CAM v3 — Outreach",tag:"cam",
+q:"¿Cómo funciona el bonus de Outreach para el CAM?",
+o:["Bonus mensual recurrente basado en AUM","Pago único basado en BF generado por clientes externos","Comisión del 10% sobre cada depósito del referido","Bonus trimestral sobre el número de referidos"],
+a:1,e:"Outreach es un pago único basado en la comisión BF generada por clientes 100% externos traídos por el manager (Sección 12)."},
+
+{s:"A",sec:"Protocolo CAM v3 — Incentivo",tag:"cam",
+q:"¿Qué incentivo adicional recibe un CAM que no tiene infracciones en el período?",
+o:["+3% en Qcalls","+5% en Qcalls","+10% en bonus","Un día libre adicional"],
+a:1,e:"Un manager sin infracciones recibe +5% en Qcalls como incentivo (Sección 11)."},
+
+{s:"A",sec:"Protocolo CAM v3 — CRM",tag:"cam",
+q:"¿Qué debe registrar el CAM en el CRM después de CADA interacción con un lead?",
+o:["Solo el resultado de la llamada","Comentario con resumen, siguiente paso y fecha de follow-up","El nombre del lead solamente","Un tag de categoría únicamente"],
+a:1,e:"Después de cada interacción: comentario con resumen de la conversación, siguiente paso acordado, y fecha de follow-up (Sección 8)."},
+
+{s:"A",sec:"Protocolo CAM v3 — Tipos de Consulting",tag:"cam",
+q:"En el sistema SM del CAM, ¿qué valor tiene una visita online (video call)?",
+o:["1 consulting / 10 min","2 consultings / 20 min","3 consultings / 40 min","5 consultings / 60 min"],
+a:2,e:"Visita Online = 3 consultings / 40 min. Visita Offline = 3 consultings / 60 min (Sección 10)."},
+
+{s:"A",sec:"Protocolo CAM v3 — Equipos",tag:"cam",
+q:"Si un CAM renuncia, ¿qué debe hacer con el equipo proporcionado por la empresa?",
+o:["Puede quedárselo si trabajó más de 6 meses","Debe devolver TODO el equipo listado en la Sección 1.2","Solo devuelve el headset y laptop","Negocia con HR qué devolver"],
+a:1,e:"El empleado debe devolver TODO el equipo proporcionado por la empresa listado en la Sección 1.2 (Sección 14)."},
+
+{s:"A",sec:"Protocolo CAM v3 — Workplace",tag:"cam",
+q:"¿Cuál de estos NO es un requisito del Workplace Audit (S1.2)?",
+o:["Internet estable y rápido","Headset con micrófono","Cuenta personal de trading activa","Cámara web funcional"],
+a:2,e:"El Workplace Audit incluye internet, headset, webcam, etc. Una cuenta personal de trading NO es requisito — se usan cuentas demo de la empresa (Sección 1.2)."},
+
+// ===== SECCIÓN B: PROTOCOLO PBA v3 (15 preguntas) =====
+{s:"B",sec:"Protocolo PBA v3 — SM y Objetivos",tag:"pba",
+q:"¿Cuáles son los objetivos diarios de Sales Minimum para un PBA?",
+o:["17 consultings, 170 min, ≥85% calidad","15 consultings, 170 min, 88% calidad","15 consultings, 150 min, 90% calidad","20 consultings, 200 min, 85% calidad"],
+a:1,e:"PBA: 15 consultings/día, 170 minutos, 88% calidad. Note la diferencia con CAM (17/170/85%)."},
+
+{s:"B",sec:"Protocolo PBA v3 — Rol y Foco",tag:"pba",
+q:"¿Cuál es el foco principal del PBA?",
+o:["Leads nuevos — primer contacto y FTD","Portafolio de clientes — aumentar AUM, BF y LTV","Solo clientes VIP con SOT 47,500+","Cold outreach y nuevos mercados"],
+a:1,e:"El PBA gestiona su portafolio para aumentar AUM, Brokerage Fee y LTV a través de relaciones a largo plazo (Sección 3)."},
+
+{s:"B",sec:"Protocolo PBA v3 — Cobertura",tag:"pba",
+q:"¿Cuáles son los porcentajes mínimos de cobertura mensual para un PBA?",
+o:["60% activos, 10% inactivos","80% activos, 20% inactivos","100% activos, 50% inactivos","90% activos, 30% inactivos"],
+a:1,e:"Cobertura mínima: 80% de clientes activos contactados exitosamente, 20% de inactivos reactivados por mes (Sección 5.2)."},
+
+{s:"B",sec:"Protocolo PBA v3 — FTD",tag:"pba",
+q:"Cuando un FTD es asignado al PBA, ¿cuál es la regla de contacto?",
+o:["Contactar dentro de 48 horas","Contactar el mismo día: 4 llamadas + 1 WhatsApp + 1 email","Contactar dentro de 24 horas con un email","Esperar a que el cliente contacte primero"],
+a:1,e:"Regla de contacto FTD: mismo día, secuencia 4+1WA+1email (Sección 5.1)."},
+
+{s:"B",sec:"Protocolo PBA v3 — VIP",tag:"pba",
+q:"¿A partir de qué nivel de SOT se aplican los estándares VIP obligatorios?",
+o:["SOT 1,500+","SOT 4,750+","SOT 9,500+","SOT 47,500+"],
+a:1,e:"Los estándares de satisfacción VIP aplican a clientes con SOT 4,750+ (Sección 5.3)."},
+
+{s:"B",sec:"Protocolo PBA v3 — VIP Métricas",tag:"pba",
+q:"¿Qué métricas de satisfacción deben mantenerse por encima del 80% con clientes VIP core?",
+o:["NPS solamente","CSI y NPS","CSAT y CES","AUM y BF"],
+a:1,e:"CSI (Customer Satisfaction Index) y NPS (Net Promoter Score) deben estar por encima de 80% con clientes VIP core (Sección 5.3)."},
+
+{s:"B",sec:"Protocolo PBA v3 — KPI",tag:"pba",
+q:"¿Cuáles son los 3 componentes del KPI del PBA y sus pesos?",
+o:["FTD 0.5, BF 0.3, AUM 0.2","ND 0.4, BF 0.4, AUM 0.2","ND 0.5, BF 0.5, AUM 0.0","ND 0.3, BF 0.3, AUM 0.4"],
+a:1,e:"KPI PBA: ND (Net Deposits) 0.4 + BF (Brokerage Fee) 0.4 + AUM 0.20 = 1.0 (Sección 6)."},
+
+{s:"B",sec:"Protocolo PBA v3 — Pipeline",tag:"pba",
+q:"¿Cuál es el objetivo semanal de pipeline para el PBA?",
+o:["5-10 prospectos, cerrar 1-3","7-15 prospectos, cerrar 3-5","10-20 prospectos, cerrar 5-8","15-25 prospectos, cerrar 7-10"],
+a:1,e:"Pipeline PBA: 7-15 nuevos prospectos por semana, cerrar 3-5 (Sección 8.5)."},
+
+{s:"B",sec:"Protocolo PBA v3 — SOT Frecuencia",tag:"pba",
+q:"Según el protocolo VIP, ¿cuál es la frecuencia de contacto para un cliente con SOT 47,500+?",
+o:["Una vez al mes","Cada 2 semanas","Semanal como mínimo","Diario"],
+a:2,e:"Clientes SOT 47,500+ requieren contacto semanal mínimo como parte del protocolo VIP (Sección 5.3)."},
+
+{s:"B",sec:"Protocolo PBA v3 — Bonus",tag:"pba",
+q:"La fórmula del bonus PBA es SOT × KPI × Qcalls. ¿Qué sucede si el resultado supera el 100%?",
+o:["Se redondea a 100%","El bonus se duplica","El bonus es sin tope (uncapped)","Se aplica un multiplicador de 1.5x"],
+a:2,e:"El bonus PBA es uncapped — sin tope cuando supera 100%. Esto incentiva la sobreperformance (Sección 12)."},
+
+{s:"B",sec:"Protocolo PBA v3 — Libertex/LA",tag:"pba",
+q:"¿Está permitido que un PBA use su cuenta personal de Libertex para operar mientras trabaja en la empresa?",
+o:["Sí, sin restricciones","Sí, pero solo en horario fuera de trabajo","Depende de la aprobación del Director","Debe seguir la política de la Sección 13"],
+a:3,e:"La Sección 13 establece las reglas específicas sobre cuentas personales de Libertex y Life Academy para el equipo."},
+
+{s:"B",sec:"Protocolo PBA v3 — Modificaciones",tag:"pba",
+q:"¿Cómo se comunican las modificaciones al protocolo PBA?",
+o:["Por email del Director","Por actualización en el documento oficial con notificación","Verbalmente en la reunión semanal","Automáticamente sin notificación"],
+a:1,e:"Las modificaciones se comunican mediante actualización del documento oficial con notificación correspondiente (Sección 16)."},
+
+// ===== SECCIÓN C: COMPARATIVA CAM vs PBA (5 preguntas) =====
+{s:"C",sec:"Comparativa CAM vs PBA",tag:"both",
+q:"¿Cuál es la diferencia clave entre el SM del CAM y del PBA?",
+o:["CAM: 17 cons/170min/85% vs PBA: 15 cons/170min/88%","CAM: 15 cons/150min/85% vs PBA: 17 cons/170min/88%","Ambos tienen los mismos targets","CAM: 20 cons/200min/90% vs PBA: 15 cons/170min/88%"],
+a:0,e:"CAM requiere más consultings (17 vs 15) pero con menor umbral de calidad (85% vs 88%). PBA tiene menos volumen pero mayor exigencia de calidad."},
+
+{s:"C",sec:"Comparativa CAM vs PBA",tag:"both",
+q:"¿Cuál es la diferencia principal en la asignación de clientes entre CAM y PBA?",
+o:["CAM recibe leads, PBA recibe un portafolio de clientes existentes","Ambos reciben leads","CAM recibe clientes VIP, PBA recibe leads","No hay diferencia en asignación"],
+a:0,e:"CAM trabaja con leads (nuevos), PBA gestiona un portafolio de clientes existentes (FTD, activos, inactivos, VIP)."},
+
+{s:"C",sec:"Comparativa CAM vs PBA",tag:"both",
+q:"El flujo CAM → PBA funciona así:",
+o:["PBA transfiere clientes a CAM para reactivación","CAM genera el FTD, luego el cliente es transferido a PBA para gestión de relación","CAM y PBA trabajan con los mismos clientes simultáneamente","CAM solo genera FTDs, que van directamente a un Analista"],
+a:1,e:"El flujo es: CAM genera leads → FTD → transferencia a PBA para gestión de portafolio y relación a largo plazo."},
+
+{s:"C",sec:"Comparativa CAM vs PBA",tag:"both",
+q:"¿Cuál de las siguientes infracciones aplica IGUAL para CAM y PBA?",
+o:["La frecuencia de contacto VIP","El reporte semanal con fecha límite viernes 1:00 PM","Los targets de ND son iguales","La cantidad de pipeline semanal"],
+a:1,e:"Ambos protocolos comparten la misma fecha límite de reporte semanal: viernes 1:00 PM (Sección 8.6 en ambos)."},
+
+{s:"C",sec:"Comparativa CAM vs PBA",tag:"both",
+q:"El bonus de Outreach funciona de manera diferente entre CAM y PBA. ¿En qué se diferencian?",
+o:["Solo CAM tiene Outreach, PBA no","Solo PBA tiene Outreach, CAM no","Ambos tienen Outreach pero CAM es recurrente y PBA es pago único","Ambos tienen Outreach como pago único basado en BF generado"],
+a:3,e:"Ambos roles tienen bonus de Outreach como pago único basado en BF generado por clientes 100% externos (Sección 12 en ambos)."},
+
+// ===== SECCIÓN D: MATRIZ DE COMPETENCIAS (5 preguntas) =====
+{s:"D",sec:"Matriz de Competencias",tag:"matrix",
+q:"¿Cuáles son los 4 niveles de la escala de evaluación en la Matriz de Competencias?",
+o:["Básico, Intermedio, Avanzado, Experto","No cumple, En desarrollo, Cumple, Excede","Junior, Account, Executive, Senior","Insatisfactorio, Aceptable, Bueno, Excelente"],
+a:1,e:"La escala es: No cumple (1) → En desarrollo (2) → Cumple (3) → Excede (4). Cada competencia se evalúa en esta escala."},
+
+{s:"D",sec:"Matriz de Competencias",tag:"matrix",
+q:"¿Cuándo se realiza la evaluación formal usando la Matriz de Competencias?",
+o:["Solo al final del período de prueba (Día 90)","Trimestralmente","En los checkpoints Day 30, 60 y 90","Mensualmente desde el primer mes"],
+a:2,e:"La Matriz se usa formalmente en los checkpoints Day 30 (primera evaluación), Day 60 (progreso), y Day 90 (revisión de prueba)."},
+
+{s:"D",sec:"Matriz de Competencias",tag:"matrix",
+q:"Como Coach, ¿cómo debe usar la Matriz de Competencias durante el onboarding?",
+o:["Solo para la evaluación final del Día 90","Para presentar al nuevo empleado sus expectativas de nivel desde el primer día","No se usa durante onboarding, solo post-onboarding","Para comparar al nuevo empleado con otros miembros del equipo"],
+a:1,e:"La Matriz se presenta al nuevo empleado durante el onboarding (Module 13/PBA, Day 19-20/CAM) para que conozca las expectativas de su nivel."},
+
+{s:"D",sec:"Matriz de Competencias",tag:"matrix",
+q:"Si un empleado 'No cumple' en una competencia crítica en el Day 60, ¿cuál es la acción correcta?",
+o:["Despido inmediato","Crear plan de mejora específico para esa competencia antes del Day 90","Ignorar y esperar al Day 90","Transferir a otro departamento"],
+a:1,e:"Si 'No cumple' en Day 60: plan de mejora específico con acciones concretas, coaching adicional, y re-evaluación en Day 90 antes de tomar decisiones de empleo."},
+
+{s:"D",sec:"Matriz de Competencias",tag:"matrix",
+q:"¿Cuál es la principal diferencia entre la Matriz de Competencias del CAM y la del PBA?",
+o:["No hay diferencia, es la misma matriz","CAM enfoca en volumen/conversión de leads, PBA en gestión de relaciones/portafolio","CAM incluye competencias técnicas, PBA solo soft skills","PBA tiene más competencias que CAM"],
+a:1,e:"CAM evalúa: velocidad, volumen, conversión de leads, manejo de objeciones rápidas. PBA evalúa: gestión de relaciones, conocimiento de mercados, servicio VIP, retención."},
+];
+
+// Render questions
+const container = document.getElementById('questionsContainer');
+let currentSection = '';
+questions.forEach((q, i) => {
+  const secKey = q.s;
+  const secNames = {A:'Sección A: Protocolo CAM v3',B:'Sección B: Protocolo PBA v3',C:'Sección C: Comparativa CAM vs PBA',D:'Sección D: Matriz de Competencias'};
+  const secCounts = {A:'15 preguntas',B:'12 preguntas',C:'5 preguntas',D:'5 preguntas'};
+  if (secKey !== currentSection) {
+    currentSection = secKey;
+    container.innerHTML += `<div class="section-header">${secNames[secKey]}<span>${secCounts[secKey]}</span></div>`;
+  }
+  const tagClass = q.tag==='cam'?'tag-cam':q.tag==='pba'?'tag-pba':q.tag==='matrix'?'tag-matrix':'tag-both';
+  const tagLabel = q.tag==='cam'?'CAM':q.tag==='pba'?'PBA':q.tag==='matrix'?'MATRIZ':'CAM+PBA';
+  let html = `<div class="question" id="q${i}">
+    <div class="q-text"><span class="q-num">${i+1}</span>${q.q} <span class="tag ${tagClass}">${tagLabel}</span></div>
+    <div class="options">`;
+  q.o.forEach((opt, j) => {
+    html += `<label id="q${i}o${j}"><input type="radio" name="q${i}" value="${j}"> ${String.fromCharCode(65+j)}) ${opt}</label>`;
+  });
+  html += `</div><div class="explanation" id="exp${i}">💡 ${q.e}</div></div>`;
+  container.innerHTML += html;
+});
+
+// Timer
+let seconds = 0;
+setInterval(() => {
+  seconds++;
+  const m = Math.floor(seconds/60).toString().padStart(2,'0');
+  const s = (seconds%60).toString().padStart(2,'0');
+  document.getElementById('timer').textContent = `⏱ ${m}:${s}`;
+}, 1000);
+
+function gradeTest() {
+  const name = document.getElementById('userName').value || 'Sin nombre';
+  const role = document.getElementById('userRole').value || 'Sin cargo';
+  let correct = 0;
+  const sectionScores = {A:{c:0,t:0},B:{c:0,t:0},C:{c:0,t:0},D:{c:0,t:0}};
+  
+  questions.forEach((q, i) => {
+    sectionScores[q.s].t++;
+    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+    const expEl = document.getElementById(`exp${i}`);
+    expEl.style.display = 'block';
+    
+    if (selected) {
+      const val = parseInt(selected.value);
+      if (val === q.a) {
+        correct++;
+        sectionScores[q.s].c++;
+        document.getElementById(`q${i}o${val}`).classList.add('correct');
+      } else {
+        document.getElementById(`q${i}o${val}`).classList.add('incorrect');
+        document.getElementById(`q${i}o${q.a}`).classList.add('correct');
+      }
+    } else {
+      document.getElementById(`q${i}o${q.a}`).classList.add('correct');
+    }
+    // Disable all radios
+    document.querySelectorAll(`input[name="q${i}"]`).forEach(r => r.disabled = true);
+  });
+
+  const pct = Math.round((correct/questions.length)*100);
+  const pass = pct >= 75;
+  const mins = Math.floor(seconds/60);
+  const secs = seconds%60;
+
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.style.display = 'block';
+  resultsDiv.innerHTML = `
+    <h2>${name} — ${role}</h2>
+    <div class="score ${pass?'pass':'fail'}">${pct}%</div>
+    <h2>${pass?'✅ APROBADO':'❌ NO APROBADO'}</h2>
+    <p>${correct}/${questions.length} respuestas correctas | Tiempo: ${mins}m ${secs}s | Mínimo: 75% (30/40)</p>
+    <div class="breakdown">
+    <table>
+      <tr><th>Sección</th><th>Correctas</th><th>Total</th><th>%</th></tr>
+      <tr><td>A. Protocolo CAM v3</td><td>${sectionScores.A.c}</td><td>${sectionScores.A.t}</td><td>${Math.round(sectionScores.A.c/sectionScores.A.t*100)}%</td></tr>
+      <tr><td>B. Protocolo PBA v3</td><td>${sectionScores.B.c}</td><td>${sectionScores.B.t}</td><td>${Math.round(sectionScores.B.c/sectionScores.B.t*100)}%</td></tr>
+      <tr><td>C. Comparativa CAM vs PBA</td><td>${sectionScores.C.c}</td><td>${sectionScores.C.t}</td><td>${Math.round(sectionScores.C.c/sectionScores.C.t*100)}%</td></tr>
+      <tr><td>D. Matriz de Competencias</td><td>${sectionScores.D.c}</td><td>${sectionScores.D.t}</td><td>${Math.round(sectionScores.D.c/sectionScores.D.t*100)}%</td></tr>
+    </table>
+    </div>
+    <p style="margin-top:20px;color:#666;font-size:13px">Fecha: ${new Date().toLocaleDateString('es-CL')} | Liberty Finance — Departamento Comercial</p>
+  `;
+  resultsDiv.scrollIntoView({behavior:'smooth'});
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('submitBtn').textContent = '✅ Test Enviado';
+}
+</script>
+</body>
+</html>
