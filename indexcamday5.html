@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CP2 — Evaluación Día 5 | CAM | Liberty Finance</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0F2440;
+  --navy-mid: #1B3A5C;
+  --navy-light: #264A6E;
+  --gold: #C4A35A;
+  --gold-light: #E8D5A0;
+  --gold-bg: #FBF6EC;
+  --red: #CC2936;
+  --red-bg: #FEF0F1;
+  --green: #1B7A3D;
+  --green-bg: #EEFBF2;
+  --blue: #1565C0;
+  --bg: #F4F1EB;
+  --card: #FFFFFF;
+  --text: #1A1A1A;
+  --text-secondary: #5A6270;
+  --border: #DDD8CE;
+  --section-gap: 2rem;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── STICKY HEADER ── */
+.top-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--navy);
+  color: white;
+  padding: 0.6rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.top-bar-brand {
+  display: flex; align-items: center; gap: 0.75rem;
+}
+.top-bar-logo {
+  width: 32px; height: 32px;
+  background: var(--gold);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px; color: var(--navy); font-weight: 700;
+}
+.top-bar h1 {
+  font-size: 0.85rem; font-weight: 600; letter-spacing: 0.03em;
+}
+.top-bar-stats {
+  display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap;
+}
+.stat-pill {
+  display: flex; align-items: center; gap: 0.4rem;
+  background: rgba(255,255,255,0.1);
+  padding: 0.3rem 0.75rem; border-radius: 20px;
+  font-size: 0.78rem; font-weight: 500;
+  transition: background 0.3s;
+}
+.stat-pill.timer-pill { font-family: 'JetBrains Mono', monospace; min-width: 120px; }
+.stat-pill .icon { font-size: 0.9rem; }
+.stat-pill.pass { background: rgba(27,122,61,0.35); }
+.stat-pill.warn { background: rgba(196,163,90,0.35); }
+.stat-pill.fail { background: rgba(204,41,54,0.35); }
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 50%, var(--navy-mid) 100%);
+  padding: 3rem 1.5rem 2.5rem;
+  color: white;
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -50%; right: -20%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(196,163,90,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero-inner { max-width: 900px; margin: 0 auto; position: relative; }
+.hero-badge {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.3rem 1rem; border-radius: 20px;
+  margin-bottom: 1rem;
+}
+.hero h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  line-height: 1.15; margin-bottom: 0.5rem;
+}
+.hero p { color: rgba(255,255,255,0.7); font-size: 0.95rem; max-width: 550px; }
+.hero-meta {
+  margin-top: 1.5rem;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+.hero-meta-item {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px; padding: 0.75rem 1rem;
+}
+.hero-meta-item label {
+  display: block; font-size: 0.65rem; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--gold-light); margin-bottom: 0.2rem;
+}
+.hero-meta-item span { font-weight: 600; font-size: 0.9rem; }
+.hero-meta-item input {
+  background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.3);
+  color: white; font-family: inherit; font-size: 0.9rem; font-weight: 600;
+  width: 100%; padding: 0.15rem 0; outline: none;
+}
+.hero-meta-item input::placeholder { color: rgba(255,255,255,0.35); }
+.deel-tag {
+  display: inline-flex; align-items: center; gap: 0.3rem;
+  background: rgba(196,163,90,0.2); border: 1px solid var(--gold);
+  border-radius: 6px; padding: 0.15rem 0.6rem;
+  font-size: 0.75rem; font-weight: 600; color: var(--gold-light);
+}
+
+/* ── MAIN ── */
+.main { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+/* ── SECTION CARD ── */
+.section-card {
+  background: var(--card);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  margin-bottom: var(--section-gap);
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  transition: box-shadow 0.3s;
+}
+.section-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+
+.section-header {
+  background: var(--navy);
+  color: white;
+  padding: 1rem 1.25rem;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; user-select: none;
+}
+.section-header h3 {
+  font-size: 0.95rem; font-weight: 600;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.section-header .part-badge {
+  background: var(--gold);
+  color: var(--navy);
+  font-size: 0.65rem; font-weight: 700;
+  padding: 0.2rem 0.6rem; border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+.section-score {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-size: 0.8rem; font-family: 'JetBrains Mono', monospace;
+}
+.section-score .score-val { color: var(--gold-light); font-weight: 600; }
+.section-body { padding: 1.25rem; }
+
+/* ── QUESTION ── */
+.question {
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+  border-left: 3px solid var(--navy-light);
+  transition: border-color 0.3s;
+}
+.question.answered { border-left-color: var(--green); }
+.question-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 0.75rem; margin-bottom: 0.5rem;
+}
+.question-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem; font-weight: 600;
+  color: var(--navy); background: rgba(15,36,64,0.08);
+  padding: 0.15rem 0.5rem; border-radius: 4px;
+  white-space: nowrap;
+}
+.question-text { font-size: 0.9rem; font-weight: 500; flex: 1; }
+.question textarea {
+  width: 100%; min-height: 70px; padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border); border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+  background: white; resize: vertical; outline: none;
+  transition: border-color 0.3s;
+}
+.question textarea:focus { border-color: var(--navy-mid); }
+
+.question-scoring {
+  display: flex; gap: 0.4rem; margin-top: 0.5rem; flex-wrap: wrap;
+}
+.score-btn {
+  padding: 0.25rem 0.65rem; border-radius: 6px;
+  font-size: 0.72rem; font-weight: 600;
+  border: 1.5px solid var(--border); background: white;
+  cursor: pointer; transition: all 0.2s;
+}
+.score-btn:hover { transform: scale(1.05); }
+.score-btn.pass-btn.active { background: var(--green); color: white; border-color: var(--green); }
+.score-btn.partial-btn.active { background: var(--gold); color: var(--navy); border-color: var(--gold); }
+.score-btn.fail-btn.active { background: var(--red); color: white; border-color: var(--red); }
+
+/* ── TASK ── */
+.task-card {
+  background: white;
+  border: 2px solid var(--red);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+.task-card::before {
+  content: 'TAREA PRÁCTICA';
+  position: absolute; top: -10px; left: 16px;
+  background: var(--red); color: white;
+  font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em;
+  padding: 0.15rem 0.6rem; border-radius: 4px;
+}
+.task-title {
+  font-weight: 700; font-size: 0.95rem; color: var(--red);
+  margin-bottom: 0.4rem; margin-top: 0.25rem;
+}
+.task-instructions {
+  font-size: 0.85rem; color: var(--text-secondary);
+  margin-bottom: 0.6rem;
+}
+.task-criteria {
+  background: var(--red-bg); border-radius: 8px;
+  padding: 0.6rem 0.8rem; font-size: 0.78rem;
+  margin-bottom: 0.75rem;
+}
+.task-criteria strong { color: var(--red); }
+.task-result {
+  display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;
+}
+.task-result .score-btn { font-size: 0.78rem; padding: 0.3rem 0.85rem; }
+
+/* ── REFERENCE TABLE ── */
+.ref-table {
+  width: 100%; border-collapse: collapse;
+  font-size: 0.78rem; margin: 0.75rem 0;
+}
+.ref-table th {
+  background: var(--navy); color: white;
+  padding: 0.5rem 0.6rem; text-align: left;
+  font-weight: 600; font-size: 0.7rem;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.ref-table td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--border); }
+.ref-table tr:nth-child(even) td { background: #F8F7F4; }
+.ref-table .prohibited { color: var(--red); font-weight: 600; }
+.ref-table .correct { color: var(--green); font-weight: 600; }
+
+/* ── ACCESS CHECKLIST ── */
+.access-grid {
+  display: grid; gap: 0.5rem;
+}
+.access-item {
+  display: grid; grid-template-columns: 1fr 80px 80px;
+  align-items: center; gap: 0.5rem;
+  background: var(--bg); border-radius: 8px;
+  padding: 0.6rem 0.8rem; font-size: 0.82rem;
+}
+.access-item .sys-name { font-weight: 500; }
+.access-check {
+  width: 20px; height: 20px;
+  border: 2px solid var(--border); border-radius: 5px;
+  cursor: pointer; display: flex; align-items: center;
+  justify-content: center; background: white;
+  transition: all 0.2s; margin: 0 auto;
+}
+.access-check.checked {
+  background: var(--green); border-color: var(--green); color: white;
+}
+.access-check.unchecked {
+  background: var(--red-bg); border-color: var(--red);
+}
+
+/* ── NOTES BLOCK ── */
+.deel-notes {
+  background: linear-gradient(135deg, var(--gold-bg) 0%, #FFF8E8 100%);
+  border: 1px solid var(--gold);
+  border-radius: 12px; padding: 1.25rem;
+  margin-bottom: var(--section-gap);
+}
+.deel-notes h4 {
+  color: var(--navy); font-size: 0.9rem; margin-bottom: 0.75rem;
+  display: flex; align-items: center; gap: 0.4rem;
+}
+.deel-note-item {
+  margin-bottom: 0.6rem; font-size: 0.82rem;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--gold);
+}
+.deel-note-item strong { color: var(--navy); }
+
+/* ── RESULT DASHBOARD ── */
+.result-dashboard {
+  background: var(--card);
+  border-radius: 14px; border: 2px solid var(--navy);
+  overflow: hidden; margin-bottom: var(--section-gap);
+}
+.result-dashboard-header {
+  background: var(--navy); color: white;
+  padding: 1.25rem; text-align: center;
+}
+.result-dashboard-header h3 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.3rem;
+}
+.result-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1px; background: var(--border);
+}
+.result-cell {
+  background: white; padding: 1rem;
+  text-align: center;
+}
+.result-cell label {
+  display: block; font-size: 0.65rem; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-secondary); margin-bottom: 0.3rem;
+}
+.result-cell .big-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.8rem; font-weight: 700; color: var(--navy);
+}
+.result-cell .big-num.pass-color { color: var(--green); }
+.result-cell .big-num.warn-color { color: var(--gold); }
+.result-cell .big-num.fail-color { color: var(--red); }
+
+.decision-grid { padding: 1rem; }
+.decision-row {
+  display: grid; grid-template-columns: 140px 100px 1fr 90px;
+  gap: 0.5rem; align-items: center;
+  padding: 0.5rem; border-radius: 8px; margin-bottom: 0.4rem;
+  font-size: 0.78rem;
+}
+.decision-row.active-decision { background: var(--gold-bg); border: 1px solid var(--gold); }
+
+/* ── SIGNATURES ── */
+.signatures {
+  background: var(--card);
+  border-radius: 14px; border: 1px solid var(--border);
+  padding: 1.5rem; margin-bottom: var(--section-gap);
+}
+.sig-row {
+  display: grid; grid-template-columns: 1fr 1fr 120px;
+  gap: 1rem; margin-bottom: 1rem;
+  padding-bottom: 1rem; border-bottom: 1px dashed var(--border);
+}
+.sig-row:last-child { border: none; margin: 0; padding: 0; }
+.sig-label { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+.sig-line { border-bottom: 1px solid var(--navy); min-height: 30px; margin-top: 0.25rem; }
+
+/* ── TIMER CONTROLS ── */
+.timer-controls {
+  display: flex; gap: 0.5rem; align-items: center;
+}
+.timer-btn {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white; padding: 0.25rem 0.6rem;
+  border-radius: 6px; cursor: pointer;
+  font-size: 0.72rem; font-weight: 600;
+  transition: background 0.2s;
+}
+.timer-btn:hover { background: rgba(255,255,255,0.25); }
+.timer-btn.active-timer { background: var(--green); border-color: var(--green); }
+
+/* ── PRINT ── */
+.print-btn {
+  position: fixed; bottom: 1.5rem; right: 1.5rem;
+  background: var(--navy); color: white;
+  border: none; padding: 0.7rem 1.2rem;
+  border-radius: 10px; cursor: pointer;
+  font-family: inherit; font-weight: 600;
+  font-size: 0.85rem; box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  display: flex; align-items: center; gap: 0.4rem;
+  transition: transform 0.2s;
+  z-index: 50;
+}
+.print-btn:hover { transform: translateY(-2px); }
+
+@media print {
+  .top-bar, .print-btn, .timer-controls, .timer-btn { display: none !important; }
+  .section-card { break-inside: avoid; }
+  body { background: white; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  .hero { padding: 2rem 1rem; }
+  .hero h2 { font-size: 1.5rem; }
+  .section-body { padding: 1rem; }
+  .access-item { grid-template-columns: 1fr 60px 60px; font-size: 0.75rem; }
+  .decision-row { grid-template-columns: 1fr; }
+  .sig-row { grid-template-columns: 1fr; }
+}
+
+/* ── COLLAPSE ANIM ── */
+.section-body { max-height: 5000px; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s; }
+.section-card.collapsed .section-body { max-height: 0; padding: 0 1.25rem; }
+.chevron { transition: transform 0.3s; font-size: 1.1rem; }
+.section-card.collapsed .chevron { transform: rotate(-90deg); }
+
+.subsection-title {
+  font-size: 0.8rem; font-weight: 600; color: var(--navy-mid);
+  text-transform: uppercase; letter-spacing: 0.06em;
+  margin: 1rem 0 0.5rem; padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<!-- ─── TOP BAR ─── -->
+<div class="top-bar" id="topBar">
+  <div class="top-bar-brand">
+    <div class="top-bar-logo">LF</div>
+    <h1>CP2 — Evaluación Día 5 — Jenny CAM</h1>
+  </div>
+  <div class="top-bar-stats">
+    <div class="stat-pill timer-pill">
+      <span class="icon">⏱</span>
+      <span id="globalTimer">00:00:00</span>
+    </div>
+    <div class="timer-controls">
+      <button class="timer-btn" id="timerStart" onclick="toggleTimer()">▶ Iniciar</button>
+      <button class="timer-btn" onclick="resetTimer()">↺</button>
+    </div>
+    <div class="stat-pill" id="progressPill">
+      <span class="icon">📊</span>
+      <span id="progressText">0 / 46 pts</span>
+    </div>
+    <div class="stat-pill" id="statusPill">
+      <span id="statusText">Pendiente</span>
+    </div>
+  </div>
+</div>
+
+<!-- ─── HERO ─── -->
+<div class="hero">
+  <div class="hero-inner">
+    <span class="hero-badge">Checkpoint 2 · Fin de Fase 1</span>
+    <h2>Evaluación Día 5<br>Client Activation Manager</h2>
+    <p>Programa Revenue-Driven 30 Días · Fase 1: Survival & Structure</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <label>Nombre</label>
+        <span>Jenny</span>
+      </div>
+      <div class="hero-meta-item">
+        <label>Vinculación</label>
+        <span class="deel-tag">⚡ Contratista Deel</span>
+      </div>
+      <div class="hero-meta-item">
+        <label>Fecha de evaluación</label>
+        <input type="date" id="evalDate">
+      </div>
+      <div class="hero-meta-item">
+        <label>Coach evaluador</label>
+        <input type="text" placeholder="Nombre del coach...">
+      </div>
+      <div class="hero-meta-item">
+        <label>Duración</label>
+        <span>45-60 min (oral + práctico)</span>
+      </div>
+      <div class="hero-meta-item">
+        <label>Aprobación mínima</label>
+        <span style="color:var(--gold-light)">80% — 37+ pts + 5/6 tareas</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── MAIN ─── -->
+<div class="main">
+
+<!-- ═══ PARTE A ═══ -->
+<div class="section-card" data-section="A" data-max="6">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="part-badge">A</span> Rutina diaria y disciplina operativa</h3>
+    <div class="section-score">
+      <span class="score-val" data-section-score="A">0</span>/6
+      <span class="chevron">▼</span>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="subsection-title">A.1 — Inicio y cierre del día</div>
+
+    <div class="question" data-q="A1">
+      <div class="question-head">
+        <span class="question-num">A1</span>
+        <span class="question-text">Describe paso a paso qué debe hacer un CAM al <strong>INICIO</strong> de su día. (Mínimo 5 acciones, en orden)</span>
+      </div>
+      <textarea placeholder="Respuesta de Jenny..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'A',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'A',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'A',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="question" data-q="A2">
+      <div class="question-head">
+        <span class="question-num">A2</span>
+        <span class="question-text">Describe paso a paso qué debe hacer un CAM al <strong>CIERRE</strong> de su día. (Mínimo 5 acciones, en orden)</span>
+      </div>
+      <textarea placeholder="Respuesta de Jenny..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'A',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'A',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'A',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <details style="margin:0.5rem 0 1rem;font-size:0.78rem;color:var(--text-secondary)">
+      <summary style="cursor:pointer;font-weight:600;color:var(--navy-mid)">📋 Referencia para el Coach (clic para ver)</summary>
+      <table class="ref-table" style="margin-top:0.5rem">
+        <tr><th>Inicio del día</th><th>Cierre del día</th></tr>
+        <tr><td>1. Conectarse a MicroSIP — estado Online<br>2. Abrir Zoho CRM — tareas y follow-ups<br>3. Revisar pipeline — priorizar warm leads<br>4. Google Chat — mensajes del equipo<br>5. Verificar grabación Compeak activa<br>6. Primer bloque de llamadas</td>
+        <td>1. Registrar TODAS las llamadas en CRM<br>2. Actualizar pipeline — estados correctos<br>3. Programar follow-ups para mañana<br>4. Revisar métricas: llamadas, minutos, consultings<br>5. Resumen diario al Coach por Google Chat<br>6. Desconectar MicroSIP — Offline<br>7. Viernes: reporte semanal 13:00 Chile</td></tr>
+      </table>
+    </details>
+
+    <div class="subsection-title">A.2 — Reportes obligatorios</div>
+
+    <div class="question" data-q="A3">
+      <div class="question-head">
+        <span class="question-num">A3</span>
+        <span class="question-text">¿Qué reportes debe entregar un CAM, con qué frecuencia, a quién, y en qué formato? Nombra al menos 3.</span>
+      </div>
+      <textarea placeholder="Respuesta de Jenny..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'A',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'A',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'A',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="question" data-q="A4">
+      <div class="question-head">
+        <span class="question-num">A4</span>
+        <span class="question-text">El reporte semanal del viernes: ¿a qué hora? ¿Zona horaria? ¿Qué debe contener?</span>
+      </div>
+      <textarea placeholder="Respuesta de Jenny..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'A',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'A',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'A',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="subsection-title">A.3 — Normativos y velocidad</div>
+
+    <div class="question" data-q="A5">
+      <div class="question-head">
+        <span class="question-num">A5</span>
+        <span class="question-text">¿Cuota mensual de leads? ¿Llamadas diarias esperadas en Semana 1 vs. después del Día 5?</span>
+      </div>
+      <textarea placeholder="Respuesta de Jenny..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'A',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'A',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'A',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="question" data-q="A6">
+      <div class="question-head">
+        <span class="question-num">A6</span>
+        <span class="question-text">¿Por qué la velocidad de procesamiento es crítica? ¿Qué pasa con un lead no contactado en 24-48h?</span>
+      </div>
+      <textarea placeholder="Respuesta de Jenny..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'A',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'A',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'A',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <details style="margin-top:0.5rem;font-size:0.78rem;color:var(--text-secondary)">
+      <summary style="cursor:pointer;font-weight:600;color:var(--navy-mid)">📋 Métricas esperadas</summary>
+      <table class="ref-table" style="margin-top:0.5rem">
+        <tr><th>Métrica</th><th>Valor</th></tr>
+        <tr><td>Cuota mensual</td><td><strong>1,200 leads/mes</strong></td></tr>
+        <tr><td>Llamadas Día 2</td><td>20-30</td></tr>
+        <tr><td>Llamadas Día 3</td><td>40-60</td></tr>
+        <tr><td>Llamadas Día 5+</td><td>50+ diarias</td></tr>
+        <tr><td>Reporte semanal</td><td>Viernes 13:00 hora Chile</td></tr>
+        <tr><td>Regla de intentos</td><td>3 intentos por lead</td></tr>
+        <tr><td>Primer FTD esperado</td><td>Día 3-5</td></tr>
+      </table>
+    </details>
+  </div>
+</div>
+
+<!-- ═══ PARTE B ═══ -->
+<div class="section-card" data-section="B" data-max="5">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="part-badge">B</span> Zoho CRM — Dominio operativo</h3>
+    <div class="section-score">
+      <span class="score-val" data-section-score="B">0</span>/5
+      <span class="chevron">▼</span>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="question" data-q="B1">
+      <div class="question-head">
+        <span class="question-num">B1</span>
+        <span class="question-text">Nombra TODAS las etapas del pipeline en orden, desde lead nuevo hasta cliente depositado.</span>
+      </div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'B',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'B',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'B',0)">✗ No aprobado</button>
+      </div>
+    </div>
+    <p style="font-size:0.75rem;color:var(--text-secondary);margin:-0.5rem 0 0.75rem 0;font-style:italic">→ New → Contacted → Consulting → FTD Pending → Deposited → Follow-up</p>
+
+    <div class="question" data-q="B2">
+      <div class="question-head">
+        <span class="question-num">B2</span>
+        <span class="question-text">¿Qué información MÍNIMA debe tener cada nota de CRM después de una llamada? (≥5 elementos)</span>
+      </div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'B',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'B',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'B',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="question" data-q="B3">
+      <div class="question-head">
+        <span class="question-num">B3</span>
+        <span class="question-text">¿Qué significa 'disciplina CRM' y por qué es la base del modelo de revenue?</span>
+      </div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'B',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'B',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'B',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="question" data-q="B4">
+      <div class="question-head">
+        <span class="question-num">B4</span>
+        <span class="question-text">¿Cuándo se mueve un lead de 'New' a 'Contacted'? ¿Y de 'Contacted' a 'Consulting'?</span>
+      </div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'B',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'B',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'B',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="task-card" data-task="1">
+      <div class="task-title">Tarea 1 — CRM Zoho en vivo</div>
+      <div class="task-instructions">Crear lead ficticio → agregar notas de llamada simulada → actualizar estado a 'Contacted' → programar follow-up para mañana 10:00.</div>
+      <div class="task-criteria"><strong>Criterios:</strong> Lead creado ✓ | Notas completas (nombre, resultado, objeción, próximo paso) ✓ | Estado actualizado ✓ | Follow-up con fecha/hora ✓</div>
+      <div class="task-result">
+        <button class="score-btn pass-btn" onclick="scoreTask(this,'B',1)">✓ APROBADO</button>
+        <button class="score-btn partial-btn" onclick="scoreTask(this,'B',0.5)">◐ PARCIAL</button>
+        <button class="score-btn fail-btn" onclick="scoreTask(this,'B',0)">✗ NO APROBADO</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PARTE C ═══ -->
+<div class="section-card" data-section="C" data-max="4">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="part-badge">C</span> MicroSIP / Compeak — Telefonía</h3>
+    <div class="section-score">
+      <span class="score-val" data-section-score="C">0</span>/4
+      <span class="chevron">▼</span>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="question" data-q="C1">
+      <div class="question-head">
+        <span class="question-num">C1</span>
+        <span class="question-text">¿Pasos para llamar desde MicroSIP? ¿Cómo verificas que la grabación está activa?</span>
+      </div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'C',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'C',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'C',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="question" data-q="C2">
+      <div class="question-head">
+        <span class="question-num">C2</span>
+        <span class="question-text">Si MicroSIP no conecta: ¿qué haces? (≥3 pasos de troubleshooting)</span>
+      </div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'C',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'C',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'C',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="question" data-q="C3">
+      <div class="question-head">
+        <span class="question-num">C3</span>
+        <span class="question-text">¿Por qué es obligatorio que TODAS las llamadas estén grabadas? ¿Quién las revisa?</span>
+      </div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'C',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'C',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'C',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="task-card" data-task="2">
+      <div class="task-title">Tarea 2 — MicroSIP en vivo</div>
+      <div class="task-instructions">Realizar llamada de prueba → verificar grabación en Compeak → localizar y reproducir la grabación.</div>
+      <div class="task-criteria"><strong>Criterios:</strong> Llamada realizada ✓ | Grabación verificada ✓ | Puede localizar y reproducir ✓ | Audio aceptable ✓</div>
+      <div class="task-result">
+        <button class="score-btn pass-btn" onclick="scoreTask(this,'C',1)">✓ APROBADO</button>
+        <button class="score-btn partial-btn" onclick="scoreTask(this,'C',0.5)">◐ PARCIAL</button>
+        <button class="score-btn fail-btn" onclick="scoreTask(this,'C',0)">✗ NO APROBADO</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PARTE D ═══ -->
+<div class="section-card" data-section="D" data-max="6">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="part-badge">D</span> Misión, estructura y roles</h3>
+    <div class="section-score">
+      <span class="score-val" data-section-score="D">0</span>/6
+      <span class="chevron">▼</span>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="question" data-q="D1">
+      <div class="question-head"><span class="question-num">D1</span>
+      <span class="question-text">¿Cuál es la Misión de Liberty Finance? ¿Y la Visión 2030? (en propias palabras)</span></div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'D',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'D',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'D',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="question" data-q="D2">
+      <div class="question-head"><span class="question-num">D2</span>
+      <span class="question-text">¿Qué diferencia a Liberty Finance de un bróker tradicional? ¿Modelo 'boutique'?</span></div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'D',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'D',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'D',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="question" data-q="D3">
+      <div class="question-head"><span class="question-num">D3</span>
+      <span class="question-text">Explica el rol del CAM en 3 frases. ¿Cuál es tu métrica principal y por qué?</span></div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'D',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'D',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'D',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="question" data-q="D4">
+      <div class="question-head"><span class="question-num">D4</span>
+      <span class="question-text">¿Cómo interactúa el CAM con el PBA? ¿Cuándo se deriva un cliente al PBA?</span></div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'D',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'D',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'D',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="question" data-q="D5">
+      <div class="question-head"><span class="question-num">D5</span>
+      <span class="question-text">¿Rol del Commercial Director vs. el Coach en relación al CAM?</span></div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'D',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'D',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'D',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="question" data-q="D6">
+      <div class="question-head"><span class="question-num">D6</span>
+      <span class="question-text">¿Qué es Finance CS, Libertex y Life Academy? ¿Cómo usa el CAM cada uno?</span></div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'D',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'D',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'D',0)">✗ No aprobado</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PARTE E ═══ -->
+<div class="section-card" data-section="E" data-max="6">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="part-badge">E</span> Script, profiling y calificación</h3>
+    <div class="section-score">
+      <span class="score-val" data-section-score="E">0</span>/6
+      <span class="chevron">▼</span>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="question" data-q="E1">
+      <div class="question-head"><span class="question-num">E1</span>
+      <span class="question-text">4 fases del script: apertura → profiling → calificación → cierre. ¿Objetivo de cada fase?</span></div>
+      <textarea placeholder="Respuesta..." style="min-height:90px"></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'E',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'E',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'E',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="question" data-q="E2">
+      <div class="question-head"><span class="question-num">E2</span>
+      <span class="question-text">¿Qué preguntas de profiling para identificar high ticket en los primeros 2 min? (≥4 preguntas)</span></div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'E',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'E',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'E',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="question" data-q="E3">
+      <div class="question-head"><span class="question-num">E3</span>
+      <span class="question-text">3 perfiles: Low / Mid / High Ticket — diferencia principal en cómo los atiendes.</span></div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'E',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'E',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'E',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="question" data-q="E4">
+      <div class="question-head"><span class="question-num">E4</span>
+      <span class="question-text">¿Qué es el 'secondary advisory' y cuándo se aplica?</span></div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'E',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'E',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'E',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="task-card" data-task="3">
+      <div class="task-title">Tarea 3 — Role Play: Apertura + Profiling completo</div>
+      <div class="task-instructions">Coach actúa como cliente nuevo. Jenny: (1) apertura completa, (2) profiling → low/mid/high, (3) calificación, (4) push FTD si aplica. Tiempo: 5-8 minutos.</div>
+      <div class="task-criteria"><strong>Criterios:</strong> Apertura natural ✓ | Preguntas de profiling relevantes ✓ | Clasificación correcta ✓ | Transición fluida ✓ | Tiempo adecuado ✓</div>
+      <div class="task-result">
+        <button class="score-btn pass-btn" onclick="scoreTask(this,'E',1)">✓ APROBADO</button>
+        <button class="score-btn partial-btn" onclick="scoreTask(this,'E',0.5)">◐ PARCIAL</button>
+        <button class="score-btn fail-btn" onclick="scoreTask(this,'E',0)">✗ NO APROBADO</button>
+      </div>
+    </div>
+
+    <div class="task-card" data-task="4">
+      <div class="task-title">Tarea 4 — Métodos FTD por país</div>
+      <div class="task-instructions">Nombrar método FTD más rápido para: <strong>Chile, Paraguay, Ecuador, Perú</strong>. Explicar por qué velocidad = conversión.</div>
+      <div class="task-criteria"><strong>Criterios:</strong> 4 países correctos ✓ | Método más rápido identificado ✓ | Entiende relación velocidad-conversión ✓</div>
+      <div class="task-result">
+        <button class="score-btn pass-btn" onclick="scoreTask(this,'E',1)">✓ APROBADO</button>
+        <button class="score-btn partial-btn" onclick="scoreTask(this,'E',0.5)">◐ PARCIAL</button>
+        <button class="score-btn fail-btn" onclick="scoreTask(this,'E',0)">✗ NO APROBADO</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PARTE F ═══ -->
+<div class="section-card" data-section="F" data-max="4">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="part-badge">F</span> Compliance y lenguaje</h3>
+    <div class="section-score">
+      <span class="score-val" data-section-score="F">0</span>/4
+      <span class="chevron">▼</span>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="question" data-q="F1">
+      <div class="question-head"><span class="question-num">F1</span>
+      <span class="question-text">Lista 5 frases PROHIBIDAS bajo compliance. ¿Por qué cada una es peligrosa?</span></div>
+      <textarea placeholder="Respuesta..." style="min-height:90px"></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'F',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'F',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'F',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <details style="margin:0.5rem 0 1rem;font-size:0.78rem">
+      <summary style="cursor:pointer;font-weight:600;color:var(--navy-mid)">📋 Referencia: Frases prohibidas</summary>
+      <table class="ref-table" style="margin-top:0.5rem">
+        <tr><th>Frase PROHIBIDA ❌</th><th>Por qué</th><th>Alternativa ✓</th></tr>
+        <tr><td class="prohibited">"Te garantizo un 20% de rendimiento"</td><td>Promesa de rentabilidad = responsabilidad legal</td><td class="correct">"Históricamente hemos visto retornos de X, pero depende del mercado"</td></tr>
+        <tr><td class="prohibited">"Es 100% seguro, no hay riesgo"</td><td>Toda inversión tiene riesgo</td><td class="correct">"Estrategia diseñada para minimizar riesgo"</td></tr>
+        <tr><td class="prohibited">"Vas a ganar dinero seguro"</td><td>Garantía de ganancias = fraude</td><td class="correct">"El objetivo es hacer crecer tu capital con estrategia"</td></tr>
+        <tr><td class="prohibited">"Tienes que depositar HOY o pierdes"</td><td>Presión indebida</td><td class="correct">"La oportunidad está disponible ahora, la decisión es tuya"</td></tr>
+        <tr><td class="prohibited">"Esto no es riesgoso"</td><td>Omisión de riesgo</td><td class="correct">"Como toda inversión tiene riesgo, pero..."</td></tr>
+      </table>
+    </details>
+
+    <div class="question" data-q="F2">
+      <div class="question-head"><span class="question-num">F2</span>
+      <span class="question-text">Cliente menciona dinero de fuente sospechosa. ¿Qué haces? (Protocolo AML)</span></div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'F',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'F',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'F',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="question" data-q="F3">
+      <div class="question-head"><span class="question-num">F3</span>
+      <span class="question-text">Diferencia entre 'estrategia' y 'garantía'. ¿Por qué el lenguaje exacto importa en financial services?</span></div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'F',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'F',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'F',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="task-card" data-task="5">
+      <div class="task-title">Tarea 5 — Compliance en vivo</div>
+      <div class="task-instructions">Coach presenta 3 frases. Jenny identifica las incorrectas y las corrige con lenguaje de compliance.</div>
+      <div class="task-criteria"><strong>Criterios:</strong> Identifica frases prohibidas ✓ | Alternativas válidas ✓ | Entiende por qué importa ✓</div>
+      <div class="task-result">
+        <button class="score-btn pass-btn" onclick="scoreTask(this,'F',1)">✓ APROBADO</button>
+        <button class="score-btn partial-btn" onclick="scoreTask(this,'F',0.5)">◐ PARCIAL</button>
+        <button class="score-btn fail-btn" onclick="scoreTask(this,'F',0)">✗ NO APROBADO</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PARTE G ═══ -->
+<div class="section-card" data-section="G" data-max="3">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="part-badge">G</span> Manejo de objeciones</h3>
+    <div class="section-score">
+      <span class="score-val" data-section-score="G">0</span>/3
+      <span class="chevron">▼</span>
+    </div>
+  </div>
+  <div class="section-body">
+
+    <div class="question" data-q="G1">
+      <div class="question-head"><span class="question-num">G1</span>
+      <span class="question-text">5 categorías principales de objeciones del cliente LATAM. Ejemplo de cada una.</span></div>
+      <textarea placeholder="Respuesta..." style="min-height:90px"></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'G',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'G',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'G',0)">✗ No aprobado</button>
+      </div>
+    </div>
+    <p style="font-size:0.75rem;color:var(--text-secondary);margin:-0.5rem 0 0.75rem;font-style:italic">→ (1) Financieras, (2) Confianza, (3) Tiempo, (4) Familia, (5) Riesgo</p>
+
+    <div class="question" data-q="G2">
+      <div class="question-head"><span class="question-num">G2</span>
+      <span class="question-text">¿Técnicas de confianza específicas para clientes LATAM? (≥3 técnicas)</span></div>
+      <textarea placeholder="Respuesta..."></textarea>
+      <div class="question-scoring">
+        <button class="score-btn pass-btn" onclick="scoreQ(this,'G',1)">✓ Aprobado</button>
+        <button class="score-btn partial-btn" onclick="scoreQ(this,'G',0.5)">◐ Parcial</button>
+        <button class="score-btn fail-btn" onclick="scoreQ(this,'G',0)">✗ No aprobado</button>
+      </div>
+    </div>
+
+    <div class="task-card" data-task="6">
+      <div class="task-title">Tarea 6 — Role Play: 3 objeciones seguidas</div>
+      <div class="task-instructions">Coach lanza: (1) "No tengo dinero ahora", (2) "¿Esto no es estafa?", (3) "Déjame pensarlo y te llamo". Jenny maneja las 3 sin bloquearse. Tiempo: 5-7 min.</div>
+      <div class="task-criteria"><strong>Criterios:</strong> Responde las 3 sin perder compostura ✓ | Usa framework de objeciones ✓ | Mantiene rapport ✓ | No usa frases prohibidas ✓</div>
+      <div class="task-result">
+        <button class="score-btn pass-btn" onclick="scoreTask(this,'G',1)">✓ APROBADO</button>
+        <button class="score-btn partial-btn" onclick="scoreTask(this,'G',0.5)">◐ PARCIAL</button>
+        <button class="score-btn fail-btn" onclick="scoreTask(this,'G',0)">✗ NO APROBADO</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PARTE H ═══ -->
+<div class="section-card" data-section="H" data-max="12">
+  <div class="section-header" onclick="toggleSection(this)">
+    <h3><span class="part-badge">H</span> Accesos y sistemas — verificación</h3>
+    <div class="section-score">
+      <span class="score-val" data-section-score="H">0</span>/12
+      <span class="chevron">▼</span>
+    </div>
+  </div>
+  <div class="section-body">
+    <div class="access-grid" id="accessGrid">
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DEEL NOTES ═══ -->
+<div class="deel-notes">
+  <h4>⚡ Notas importantes — Jenny (Deel Contractor)</h4>
+  <div class="deel-note-item"><strong>Documentos pendientes:</strong> Las políticas formales (Handbook, NDA, Compliance, InfoSec, SDG, VCF, Imagen, Protección de Datos) están en proceso. Jenny NO las ha firmado. Esta evaluación cubre solo conocimiento operativo de Fase 1.</div>
+  <div class="deel-note-item"><strong>Compliance verbal:</strong> Aunque no firmó la Política de Compliance, las reglas de lenguaje y AML son obligatorias desde Día 1. El coach debe haberlas cubierto verbalmente.</div>
+  <div class="deel-note-item"><strong>Terminología Deel:</strong> Usar "Collaboration Windows" (no "horario"). Usar "Client Contact" (no "supervisor"). Los volúmenes son Service Delivery Standards, no jornada.</div>
+  <div class="deel-note-item"><strong>Docs pendientes para firma:</strong> SOW + Country Clause → NDA Contractor → Handbook → VCF → Compliance → InfoSec → Protección Datos → Imagen → SDG CAM → Cesión Imagen.</div>
+</div>
+
+<!-- ═══ RESULT DASHBOARD ═══ -->
+<div class="result-dashboard" id="resultDashboard">
+  <div class="result-dashboard-header">
+    <h3>Resultado Final</h3>
+  </div>
+  <div class="result-grid">
+    <div class="result-cell">
+      <label>Puntos</label>
+      <div class="big-num" id="totalPoints">0</div>
+      <span style="font-size:0.75rem;color:var(--text-secondary)">de 46</span>
+    </div>
+    <div class="result-cell">
+      <label>Porcentaje</label>
+      <div class="big-num" id="totalPct">0%</div>
+    </div>
+    <div class="result-cell">
+      <label>Tareas aprobadas</label>
+      <div class="big-num" id="totalTasks">0</div>
+      <span style="font-size:0.75rem;color:var(--text-secondary)">de 6</span>
+    </div>
+    <div class="result-cell">
+      <label>Tiempo total</label>
+      <div class="big-num" id="totalTime" style="font-size:1.4rem">00:00</div>
+    </div>
+  </div>
+  <div class="decision-grid">
+    <div class="decision-row" id="dec1">
+      <span style="font-weight:600;color:var(--green)">≥80% + 5/6 tareas</span>
+      <span style="color:var(--green);font-weight:700">PASS ✅</span>
+      <span>Avanzar a Fase 2 (Controlled Practice)</span>
+      <span style="color:var(--text-secondary)">Inmediato</span>
+    </div>
+    <div class="decision-row" id="dec2">
+      <span style="font-weight:600;color:var(--gold)">70-79% o 1 tarea fallida</span>
+      <span style="color:var(--gold);font-weight:700">CONDICIONAL ⚠️</span>
+      <span>Avanzar + refuerzo diario áreas débiles</span>
+      <span style="color:var(--text-secondary)">Revisión 2d</span>
+    </div>
+    <div class="decision-row" id="dec3">
+      <span style="font-weight:600;color:var(--red)">60-69% o 2+ tareas fallidas</span>
+      <span style="color:var(--red);font-weight:700">REFUERZO 🔄</span>
+      <span>Días extra Fase 1 + coaching dedicado</span>
+      <span style="color:var(--text-secondary)">+1-3 días</span>
+    </div>
+    <div class="decision-row" id="dec4">
+      <span style="font-weight:600;color:var(--red)">&lt;60%</span>
+      <span style="color:var(--red);font-weight:700">ESCALAR 🚨</span>
+      <span>Involucrar Commercial Director</span>
+      <span style="color:var(--text-secondary)">24h</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SIGNATURES ═══ -->
+<div class="signatures">
+  <h4 style="font-size:0.9rem;color:var(--navy);margin-bottom:1rem">Firmas</h4>
+  <div class="sig-row">
+    <div><div class="sig-label">Coach evaluador</div><div class="sig-line"></div></div>
+    <div><div class="sig-label">Nombre</div><div class="sig-line"></div></div>
+    <div><div class="sig-label">Fecha</div><div class="sig-line"></div></div>
+  </div>
+  <div class="sig-row">
+    <div><div class="sig-label">Jenny (Contractor)</div><div class="sig-line"></div></div>
+    <div><div class="sig-label">Firma</div><div class="sig-line"></div></div>
+    <div><div class="sig-label">Fecha</div><div class="sig-line"></div></div>
+  </div>
+  <div class="sig-row">
+    <div><div class="sig-label">Commercial Director (si escalar)</div><div class="sig-line"></div></div>
+    <div><div class="sig-label">Firma</div><div class="sig-line"></div></div>
+    <div><div class="sig-label">Fecha</div><div class="sig-line"></div></div>
+  </div>
+</div>
+
+<p style="text-align:center;font-size:0.7rem;color:var(--text-secondary);padding:1rem">
+  Liberty Finance · Programa Revenue-Driven 30 Días · Checkpoint 2 — Fin de Fase 1<br>
+  Basado en CAM_Onboarding_Org_Guide_ES y Onboarding_30D_Revenue_Driven_CAM
+</p>
+
+</div><!-- .main -->
+
+<button class="print-btn" onclick="window.print()">🖨 Imprimir / PDF</button>
+
+<script>
+// ─── STATE ───
+const scores = {};
+const taskScores = {};
+let timerInterval = null;
+let timerSeconds = 0;
+let timerRunning = false;
+
+// ─── ACCESS SYSTEMS ───
+const systems = [
+  'CRM Zoho — pipeline CAM', 'MicroSIP — extensión y marcación',
+  'Compeak — grabación', 'Google Workspace — email',
+  'Google Chat — canales equipo', 'Google Calendar — vinculado',
+  'PeopleForce — perfil activo', 'WhatsApp Business — número',
+  'Cuenta demo Libertex', 'OLAP / FxBank / Kyubit',
+  'MFA activado en todos los sistemas', 'Contraseñas cambiadas (12+ chars)'
+];
+
+const accessGrid = document.getElementById('accessGrid');
+systems.forEach((sys, i) => {
+  const item = document.createElement('div');
+  item.className = 'access-item';
+  item.innerHTML = `
+    <span class="sys-name">${sys}</span>
+    <div class="access-check" data-access="${i}" data-type="access" onclick="toggleAccess(this)"></div>
+    <div class="access-check" data-access="${i}" data-type="knows" onclick="toggleAccess(this)"></div>
+  `;
+  accessGrid.appendChild(item);
+});
+// Headers
+const hdr = document.createElement('div');
+hdr.className = 'access-item';
+hdr.style.cssText = 'font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--navy);background:transparent;';
+hdr.innerHTML = '<span>Sistema</span><span style="text-align:center">Acceso OK</span><span style="text-align:center">Sabe usar</span>';
+accessGrid.prepend(hdr);
+
+function toggleAccess(el) {
+  if (el.classList.contains('checked')) {
+    el.classList.remove('checked');
+    el.innerHTML = '';
+  } else {
+    el.classList.add('checked');
+    el.innerHTML = '✓';
+  }
+  recalcH();
+}
+
+function recalcH() {
+  let count = 0;
+  document.querySelectorAll('.access-check.checked').forEach(() => count++);
+  const pts = Math.round((count / 24) * 12 * 2) / 2;
+  document.querySelector('[data-section-score="H"]').textContent = pts;
+  scores['H'] = pts;
+  recalcTotal();
+}
+
+// ─── SCORING ───
+function scoreQ(btn, section, val) {
+  const parent = btn.closest('.question');
+  const qId = parent.dataset.q;
+  parent.querySelectorAll('.score-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  parent.classList.toggle('answered', val > 0);
+  if (!scores[section]) scores[section] = 0;
+  const oldVal = parseFloat(parent.dataset.score || 0);
+  parent.dataset.score = val;
+  scores[section] = (scores[section] - oldVal) + val;
+  document.querySelector(`[data-section-score="${section}"]`).textContent = scores[section];
+  recalcTotal();
+}
+
+function scoreTask(btn, section, val) {
+  const parent = btn.closest('.task-card');
+  const taskId = parent.dataset.task;
+  parent.querySelectorAll('.score-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const oldVal = parseFloat(parent.dataset.score || 0);
+  parent.dataset.score = val;
+  if (!scores[section]) scores[section] = 0;
+  scores[section] = (scores[section] - oldVal) + val;
+  document.querySelector(`[data-section-score="${section}"]`).textContent = scores[section];
+  taskScores[taskId] = val;
+  recalcTotal();
+}
+
+function recalcTotal() {
+  let total = 0;
+  Object.values(scores).forEach(v => total += v);
+  const pct = Math.round((total / 46) * 100);
+  const tasksOk = Object.values(taskScores).filter(v => v >= 1).length;
+
+  document.getElementById('totalPoints').textContent = total;
+  document.getElementById('totalPct').textContent = pct + '%';
+  document.getElementById('totalTasks').textContent = tasksOk;
+  document.getElementById('progressText').textContent = `${total} / 46 pts`;
+
+  const tpEl = document.getElementById('totalPoints');
+  const ppEl = document.getElementById('totalPct');
+  tpEl.className = 'big-num';
+  ppEl.className = 'big-num';
+
+  const statusPill = document.getElementById('statusPill');
+  statusPill.className = 'stat-pill';
+
+  ['dec1','dec2','dec3','dec4'].forEach(id => {
+    document.getElementById(id).classList.remove('active-decision');
+  });
+
+  if (pct >= 80 && tasksOk >= 5) {
+    tpEl.classList.add('pass-color'); ppEl.classList.add('pass-color');
+    statusPill.classList.add('pass');
+    document.getElementById('statusText').textContent = 'PASS ✅';
+    document.getElementById('dec1').classList.add('active-decision');
+  } else if (pct >= 70) {
+    tpEl.classList.add('warn-color'); ppEl.classList.add('warn-color');
+    statusPill.classList.add('warn');
+    document.getElementById('statusText').textContent = 'CONDICIONAL ⚠️';
+    document.getElementById('dec2').classList.add('active-decision');
+  } else if (pct >= 60) {
+    tpEl.classList.add('fail-color'); ppEl.classList.add('fail-color');
+    statusPill.classList.add('fail');
+    document.getElementById('statusText').textContent = 'REFUERZO 🔄';
+    document.getElementById('dec3').classList.add('active-decision');
+  } else if (total > 0) {
+    tpEl.classList.add('fail-color'); ppEl.classList.add('fail-color');
+    statusPill.classList.add('fail');
+    document.getElementById('statusText').textContent = 'ESCALAR 🚨';
+    document.getElementById('dec4').classList.add('active-decision');
+  } else {
+    document.getElementById('statusText').textContent = 'Pendiente';
+  }
+}
+
+// ─── TIMER ───
+function toggleTimer() {
+  const btn = document.getElementById('timerStart');
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    btn.textContent = '▶ Continuar';
+    btn.classList.remove('active-timer');
+  } else {
+    timerInterval = setInterval(() => {
+      timerSeconds++;
+      updateTimerDisplay();
+    }, 1000);
+    timerRunning = true;
+    btn.textContent = '⏸ Pausar';
+    btn.classList.add('active-timer');
+  }
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  timerSeconds = 0;
+  timerRunning = false;
+  updateTimerDisplay();
+  const btn = document.getElementById('timerStart');
+  btn.textContent = '▶ Iniciar';
+  btn.classList.remove('active-timer');
+}
+
+function updateTimerDisplay() {
+  const h = Math.floor(timerSeconds / 3600);
+  const m = Math.floor((timerSeconds % 3600) / 60);
+  const s = timerSeconds % 60;
+  const str = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  document.getElementById('globalTimer').textContent = str;
+  document.getElementById('totalTime').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+// ─── COLLAPSE ───
+function toggleSection(header) {
+  header.closest('.section-card').classList.toggle('collapsed');
+}
+</script>
+</body>
+</html>
